@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-// Реализация NewWindow
 NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
     setStyleSheet(
             "QWidget {"
@@ -21,6 +20,7 @@ NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
             "   border: 2px solid #233;"
             "   border-radius: 5px;"
             "   text-align: center;"
+            "   color: black;"
             "   font-family: 'Segoe UI';"
             "   font-weight: bold;"
             "   height: 20px;"
@@ -57,10 +57,8 @@ NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
     mainLayout->addWidget(titleLabel);
 
     if (labNumber == 1) {
-        // Инициализация BatteryInfo
         batteryInfo = new BatteryInfo(this);
 
-        // Форма для информации об энергопитании
         QFormLayout *formLayout = new QFormLayout();
         formLayout->setSpacing(10);
         formLayout->setContentsMargins(10, 10, 10, 10);
@@ -81,12 +79,12 @@ NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
         formLayout->addRow("Уровень заряда (%):", batteryLevelLabel);
         formLayout->addRow("Режим энергосбережения:", powerSchemeLabel);
         formLayout->addRow("Оставшееся время работы:", fullBatteryTimeLabel);
-        formLayout->addRow("Время работы от батареи:", remainingBatteryTimeLabel);
+        formLayout->addRow("Прошло с момента отключения от зарядного:", remainingBatteryTimeLabel);
+        //formLayout->addRow("Время работы аккумулятора без подключения к зарядке:",getBatteryOpTime);
         formLayout->addRow("Прогресс заряда:", batteryProgressBar);
 
         mainLayout->addLayout(formLayout);
 
-        // Кнопки для спящего режима и гибернации
         QHBoxLayout *buttonLayout = new QHBoxLayout();
         buttonLayout->setSpacing(20);
         buttonLayout->setAlignment(Qt::AlignCenter);
@@ -94,7 +92,6 @@ NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
         QPushButton *sleepButton = new QPushButton("Спящий режим", this);
         QPushButton *hibernateButton = new QPushButton("Гибернация", this);
 
-        // Устанавливаем фиксированный размер кнопок
         sleepButton->setFixedSize(150, 40);
         hibernateButton->setFixedSize(150, 40);
 
@@ -104,11 +101,9 @@ NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
         buttonLayout->addWidget(sleepButton);
         buttonLayout->addWidget(hibernateButton);
 
-        // Добавляем кнопки в основной layout
         mainLayout->addLayout(buttonLayout);
-        mainLayout->addStretch(); // Добавляем растягивающееся пространство
+        mainLayout->addStretch();
 
-        // Таймер для обновления в реальном времени
         QTimer *timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, &NewWindow::updatePowerInfo);
         timer->start(300); // 1 секунда
@@ -117,7 +112,7 @@ NewWindow::NewWindow(int labNumber, QWidget *parent) : QWidget(parent) {
     }
 
     setWindowTitle(QString("Лабораторная работа №%1").arg(labNumber));
-    resize(700, 400); // Увеличиваем размер окна
+    resize(700, 400);
 }
 
 void NewWindow::updatePowerInfo() {

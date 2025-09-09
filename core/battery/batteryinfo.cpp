@@ -21,13 +21,11 @@ void BatteryInfo::updatePowerStatus() {
         qWarning("Ошибка получения статуса питания");
     }
 
-    // Автоматически сбрасываем таймер при подключении к зарядке
     if (powerStatus.ACLineStatus == 1 && wasOnBattery) {
         batteryStartTime = 0;
         wasOnBattery = false;
     }
 
-    // Автоматически запускаем таймер при отключении от зарядки
     if (powerStatus.ACLineStatus == 0 && !wasOnBattery) {
         batteryStartTime = QDateTime::currentMSecsSinceEpoch();
         wasOnBattery = true;
@@ -99,6 +97,18 @@ QString BatteryInfo::getBatteryTime() {
             .arg(minutes, 2, 10, QLatin1Char('0'));
 }
 
+QString BatteryInfo::getBatteryOperatingTime(){
+    updatePowerStatus();
+
+    // Конвертируем время из секунд в часы и минуты
+    int totalSeconds = powerStatus.BatteryFullLifeTime;
+    int hours = totalSeconds / 3600;
+    int minutes = (totalSeconds % 3600) / 60;
+
+    return QString("%1:%2")
+            .arg(hours, 2, 10, QLatin1Char('0'))
+            .arg(minutes, 2, 10, QLatin1Char('0'));
+};
 //время работы аккумулятора с момента отключения от зарядки !!??
     QString BatteryInfo::getEstimatedTime() {
     updatePowerStatus();
